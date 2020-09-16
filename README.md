@@ -27,8 +27,8 @@ The model is scored on the second generation of RNA sequences that have just bee
 Step-by-step instructions to build a GRU model for predicting mRNA degradation rate:
 * *Exploratory data analysis* on train and test datasets. Extract information on the mRNA sequence, RNA structure, and signal to noise distribution. 
 * *Preprocess inputs* for train dataset sequence, structure, and predicted loop type.
-* Train the dataset on *GRU prediction model*.
-* Apply *pre-train model on the public (Sequence: 107) and private (Sequence: 130) test dataset* and generate the prediction results on Kaggle.
+* Train the dataset on *GRU prediction model*. Train prediction info: **Min training loss=0.2548, min validation loss=0.2513**
+* Apply *pre-train model on the public (Sequence: 107) and private (Sequence: 130) test dataset* and generate the prediction results on Kaggle. Test prediction info: Final prediction score on Kaggle: **0.2881**
 
 **Click here for project files:**
 
