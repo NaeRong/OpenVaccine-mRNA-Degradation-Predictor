@@ -20,15 +20,15 @@ Currently, little is known on the details of where in the backbone of a given RN
 
 ## Project Goals
 
-I am looking to develop the Deep-learning models (Gated Recurrent Unit) to predict likely degradation rates at each base of an RNA molecule, trained on a subset of an Eterna dataset comprising over 3000 RNA molecules (which span a panoply of sequences and structures) and their degradation rates at each position. 
+I am looking to develop the Deep-learning model (Gated Recurrent Unit) to predict likely degradation rates at each base of an RNA molecule, trained on a subset of an Eterna dataset comprising over 3000 RNA molecules (which span a panoply of sequences and structures) and their degradation rates at each position. 
 
 The model is scored on the second generation of RNA sequences that have just been devised by Eterna players for COVID-19 mRNA vaccines.
 
-In the #Foldername I will show the step-by-step instructions to build a model for predicting degradation at various locations along the mRNA sequence. 
-Exploratory data analysis on train and test datasets. Extract information on the mRNA sequence, RNA structure, and signal to noise distribution. 
-* Preprocess inputs for train dataset sequence, structure, and predicted loop type.
-* Train the dataset on GRU prediction model.
-* Apply pre-train model on the public (Sequence: 107) and private (Sequence: 130) test dataset and generate the prediction results on Kaggle.
+Step-by-step instructions to build a GRU model for predicting mRNA degradation rate:
+* *Exploratory data analysis* on train and test datasets. Extract information on the mRNA sequence, RNA structure, and signal to noise distribution. 
+* *Preprocess inputs* for train dataset sequence, structure, and predicted loop type.
+* Train the dataset on *GRU prediction model*.
+* Apply *pre-train model on the public (Sequence: 107) and private (Sequence: 130) test dataset* and generate the prediction results on Kaggle.
 
 **Click here for project files:**
 
