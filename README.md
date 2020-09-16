@@ -32,9 +32,9 @@ Step-by-step instructions to build a GRU model for predicting mRNA degradation r
 
 **Click here for project files:**
 
-**Exploratory data analysis** : [EDA Information](https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/EDA/Data_info)
+**Exploratory data analysis** : [EDA Information](https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/EDA/Data_info.md)
 
-**GRU model:** [GRU Model Information](https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/GRU%20model/Model_info)
+**GRU model:** [GRU Model Information](https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/GRU%20model/Model_info.md)
 
 Kaggle Competition link: [Kaggle OpenVaccine](https://www.kaggle.com/c/stanford-covid-vaccine)
 <p align="center">
