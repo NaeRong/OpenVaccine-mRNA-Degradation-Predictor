@@ -40,4 +40,7 @@ Kaggle Competition link: [Kaggle OpenVaccine](https://www.kaggle.com/c/stanford-
 <p align="center">
   <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/Sponsor.png">
 </p>
-
+**Submission Result:**
+<p align="center">
+  <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/Kaggle.png">
+</p>
