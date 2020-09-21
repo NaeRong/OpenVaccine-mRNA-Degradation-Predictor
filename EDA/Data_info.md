@@ -85,7 +85,9 @@ test.structure.value_counts()
 >> ......((((((((((.(((((.....))))))))((((((((...)))))...)))))))...))).(((((((....))))))).....................
 ```
 # Signal to Noise feature
-Mean signal/noise across all 5 conditions must be greater than 1.0. Signal/noise is defined as mean.
+Signal_to_noise and SN_filter columns control the 'quality' of samples! 
+
+ean signal/noise across all 5 conditions must be greater than 1.0. Signal/noise is defined as mean.
 
 The signal to noise feature on train dataset has a distribution of a right-skewed. 
 <p align="center">
