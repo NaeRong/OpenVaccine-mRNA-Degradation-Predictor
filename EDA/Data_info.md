@@ -87,14 +87,20 @@ test.structure.value_counts()
 # Signal to Noise feature
 Signal_to_noise and SN_filter columns control the 'quality' of samples! 
 
-ean signal/noise across all 5 conditions must be greater than 1.0. Signal/noise is defined as mean.
+As per the data tab of this competition the samples in test.json (Both private and public test datasets) have been filtered in the following way:
+1. Minimum value across all 5 conditions must be greater than -0.5.
+2. Mean signal/noise across all 5 conditions must be greater than 1.0. [Signal/noise is defined as mean( measurement value over 68 nts )/mean( statistical error in measurement value over 68 nts)]
+3. To help ensure sequence diversity, the resulting sequences were clustered into clusters with less than 50% sequence similarity, and the 629 test set sequences were chosen from clusters with 3 or fewer members. That is, any sequence in the test set should be sequence similar to at most 2 other sequences.
+
 
 The signal to noise feature on train dataset has a distribution of a right-skewed. 
 <p align="center">
   <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/Signal_Noise.png">
 </p>
-
-
+The signal to noise feature counts:
+<p align="center">
+  <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/Sig_Noise_cnt.png">
+</p>
 
 
 
