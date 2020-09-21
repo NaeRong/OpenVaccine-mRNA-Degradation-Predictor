@@ -4,17 +4,38 @@ mRNA subcellular localization mechanisms play an important role in post-transcri
 Zipcodes are the cis-regulatory elements from a different RNA-binding proteins interating with 
 **Next**
 
-## What is RNA degradation rate?
-## Why using Deep learning framework works?
-## What is GRU model?  
-## Model building process
-* Pre-processing columns and define target columns
-According to the competition description, only the following 5 columns are required for our model. 
+## RNA degradation rate (To be continue)
+## Deep learning framework (To be continue)
+## GRU model  (To be continue)
+## Model building steps
+### Tokenize our RNA sequences before feeding into the GRU model:
 
+As the competition required, the **target columns (Columns to predict)** are
+* 'reactivity'
+* 'deg_Mg_pH10'
+* 'deg_pH10'
+* 'deg_Mg_50C'
+* 'deg_50C'
 
-target_cols = ['reactivity', 'deg_Mg_pH10', 'deg_pH10', 'deg_Mg_50C', 'deg_50C']
+Tokenization process is shown as below. 
+
+Text preprocessing is an important step for NLP models. It transforms text into a more readable form so that machine learning algorithms can perform better.
+
+#### 1. Define token to int function. Since mRNA only contains "ACGUBEHIMSX" characters, we are assigning index for each character.  
+```python
+token2int = {x:i for i, x in enumerate('().ACGUBEHIMSX')}
+print(token2int)
+>>>{'(': 0, ')': 1, '.': 2, 'A': 3, 'C': 4, 'G': 5, 'U': 6, 'B': 7, 'E': 8, 'H': 9, 'I': 10, 'M': 11, 'S': 12, 'X': 13}
 ```
-We also need to preprocess the column inputs before putting into the model. The encoding process is showed as below:
+#### 2. Below is the Tokenization function. We are only transforming the "sequence', 'structure', 'predicted_loop_type' columns. 
+```txt
+Function definition:
+numpy.transpose(a, axes=None)
+inputs:
+    *a: input
+    *axes:If specified, it must be a tuple or list which contains a permutation of [0,1,..,N-1] where N is the number of axes of a. The i’th axis of the returned array will correspond to the axis numbered axes[i] of the input.
+```
+Applying token2int function to all the sequence and assining the output matrix to (0,2,1) axes.
 ```python
 def preprocess_inputs(df, cols=['sequence', 'structure', 'predicted_loop_type']):
     return np.transpose(
@@ -27,10 +48,99 @@ def preprocess_inputs(df, cols=['sequence', 'structure', 'predicted_loop_type'])
         (0, 2, 1)
     )
 ```
-Text preprocessing is an important step for NLP models. It transforms text into a more readable form so that machine learning algorithms can perform better.
-* Model framework
-* Model evaluation 
-* Model optimization 
+Applying preprocess_inputs function to training inputs and labels. Also setting train dataset SN_filter to 1, since we have observed that SN_filter == 1 values in test dataset.
+```python
+train_inputs = preprocess_inputs(train.loc[train.SN_filter == 1])
+train_labels = np.array(train.loc[train.SN_filter == 1][target_cols].values.tolist()).transpose((0, 2, 1))
+```
+```python
+len(train_inputs)
+>>> 1589
+len(train_labels)
+>>> 1589
+```
+### Model evaluation 
+According to the competition guideline, Mean Columnwise Root Mean Squared Error(𝑀𝐶𝑅𝑀𝑆𝐸) is the model evaluation formula.
+
+𝑀𝐶𝑅𝑀𝑆𝐸 = 1𝑚∑𝑚𝑗=1𝑅𝑀𝑆𝐸𝑗
+
+* 𝑚  - number of predicted variables
+
+* 𝑛 - number of test samples
+
+* 𝑦𝑖𝑗 - 𝑖-th actual value of 𝑗​-th variable
+
+* 𝑦𝑖𝑗 - 𝑖-th predicted value of 𝑗-th variable
+
+The MCRMSE is simply an average across all RMSE values for each of our columns. It can allow us to use a single-number evaluation metric, even in the case of multiple outputs.
+
+```python
+def MCRMSE(y_true, y_pred):
+    colwise_mse = tf.reduce_mean(tf.square(y_true - y_pred), axis=(0, 1))
+    return tf.reduce_mean(tf.sqrt(colwise_mse), axis=-1)
+```
+### GRU Model Framwork
+```python
+def gru_layer(hidden_dim, dropout):
+    return L.Bidirectional(L.GRU(hidden_dim, dropout=dropout, return_sequences=True))
+
+def build_model(seq_len=107, pred_len=68, dropout=0.5, embed_dim=75, hidden_dim=128):
+    inputs = L.Input(shape=(seq_len, 3))
+
+    embed = L.Embedding(input_dim=len(token2int), output_dim=embed_dim)(inputs)
+    reshaped = tf.reshape(
+        embed, shape=(-1, embed.shape[1],  embed.shape[2] * embed.shape[3]))
+
+    hidden = gru_layer(hidden_dim, dropout)(reshaped)
+    hidden = gru_layer(hidden_dim, dropout)(hidden)
+    hidden = gru_layer(hidden_dim, dropout)(hidden)
+    
+    # Since we are only making predictions on the first part of each sequence, we have
+    # to truncate it
+    truncated = hidden[:, :pred_len]
+    
+    out = L.Dense(5, activation='linear')(truncated)
+
+    model = tf.keras.Model(inputs=inputs, outputs=out)
+
+    model.compile(tf.keras.optimizers.Adam(), loss=MCRMSE)
+    
+    return model
+```
+```python
+model = build_model(embed_dim=len(token2int))
+model.summary()
+```
+```python
+x_train, x_val, y_train, y_val = train_test_split(
+    train_inputs, train_labels, test_size=.2, random_state=42
+)
+```
+```python 
+history = model.fit(
+    x_train, 
+    y_train,
+    validation_data=(x_val, y_val),
+    batch_size=64,
+    epochs=60,
+    verbose=2,
+    callbacks=[
+        tf.keras.callbacks.ReduceLROnPlateau(patience=5),
+        tf.keras.callbacks.ModelCheckpoint('model.h5')
+    ]
+)
+```
+Prediction result on train dataset:
+```python 
+plt.plot(history.history['val_loss'])
+plt.plot(history.history['loss'])
+plt.legend(['val_loss', 'loss'], loc='upper right')
+```
+<p align="center">
+  <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/val_loss_loss.png">
+</p>
+
+
 
 
 
