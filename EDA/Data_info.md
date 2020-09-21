@@ -102,7 +102,10 @@ The signal to noise feature counts:
   <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/Sig_Noise_cnt.png">
 </p>
 
-
+Important findings in the Signal to noise / SN_filer features are:
+* Samples with signal_to_noise greater than 1: 2096
+* Samples with SN_filter = 1: 1589
+* Samples with signal_to_noise greater than 1, but SN_filter == 0: 509
 
 
 
