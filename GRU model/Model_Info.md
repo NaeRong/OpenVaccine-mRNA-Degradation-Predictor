@@ -1,17 +1,30 @@
 
-# GRU Model to predict likely degradation rates at RNA molecule
-mRNA subcellular localization mechanisms play an important role in post-transcriptional gene regulation.
-Zipcodes are the cis-regulatory elements from a different RNA-binding proteins interating with 
+# GRU Model to Predict Likely Degradation Rates at RNA Molecule
 
-## RNN - Deep Learning Model 
-### Tokenize our RNA sequences before feeding into the GRU model:
+The goal of this project is to make a strong mRNA structure that doesn't degrade easily. 
+
+My model will take in an mRNA sequence and predict how stable it is by identifying fragile regions of bases that could break easily. The model will predict its reactivity and the degradation rates for each base of the sequence.
+
+For this competition, our inputs are the mRNA sequence (A list of characters - ACGUBEHIMSX). The rest of the columns are additional information that will help and can be discarded. 
+
+Since the inputs are multiple strings of characters, Natural Language Processing (NLP) will be a great starting point for building the prediction model. 
+
+## Deep Learning for NLP
+
+- [Tokenization](#tokenization)
+- [Model Evaluation](#model-evaluation)
+- [GRU Model Framwork](#gru-model-framwork)
+- [Test Dataset Prediction both Public and Private](#test-dataset-prediction-both-public-and-private)
+- [Final Submission Result](#final-submission-result)
+### Tokenization:
 
 As the competition required, the **target columns (Columns to predict)** are
-* 'reactivity'
-* 'deg_Mg_pH10'
-* 'deg_pH10'
-* 'deg_Mg_50C'
-* 'deg_50C'
+* 'reactivity': The probability for the base to get paired
+* 'deg_':The measure of fragility. One for each base. These numbers will indicate how likely this base is going to be the weak link and will break in different conditions (PH / Magnesium / Temperature).
+   * 'deg_Mg_pH10':
+   * 'deg_pH10'
+   * 'deg_Mg_50C'
+   * 'deg_50C'
 
 Tokenization process is shown as below. 
 
@@ -169,7 +182,7 @@ As we can see in the loss function graph, 57 epoch has the best model performanc
 </p>
 
 
-### Test Dataset Prediction(both public and private)
+### Test Dataset Prediction both Public and Private
 
 Public and private test datasets have different sequence lengths, therefore, we will preprocess each dataset separately and load the model using different tensor. 
 
@@ -197,6 +210,12 @@ gru_private_preds = gru_private.predict(private_inputs)
 
 ### Final Submission Result:
 MCRMSE : 0.28810
+
+<p align="center">
+  <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/Kaggle.png">
+</p>
+
+
 
 
 
