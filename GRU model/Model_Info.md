@@ -80,6 +80,16 @@ def MCRMSE(y_true, y_pred):
     return tf.reduce_mean(tf.sqrt(colwise_mse), axis=-1)
 ```
 ### GRU Model Framwork
+
+A Gated Recurrent Unit (GRU) model is a modification to the RNN hidden layer that makes it much better capturing long-range connections and better navigating the vanishing gradient problems. 
+
+The GRU operates using a reset gate and an update gate. The reset gate is between the prior activation and the next candidate activation to forget the previous state. The update gate will then decide how much of the candidate activation to use in updating the cell state.
+
+Both LSTMs and GRUs can keep the memory from previous activations rather than replacing the entire activation like a traditional RNN. However, 
+while the GRU performs both of forget and input gates together via its reset gate, LSTM separates these operations.
+
+With different architectures, GRU can train faster and less gradient decent volatility rate - Might be caused by fewer gates for the gradients to flow through so more steady progress after many epochs - than the LSTM.
+
 ```python
 def gru_layer(hidden_dim, dropout):
     return L.Bidirectional(L.GRU(hidden_dim, dropout=dropout, return_sequences=True))
@@ -107,15 +117,23 @@ def build_model(seq_len=107, pred_len=68, dropout=0.5, embed_dim=75, hidden_dim=
     
     return model
 ```
+We applied the build_model function on the token2int list and displayed the model detailed information.
+
 ```python
 model = build_model(embed_dim=len(token2int))
 model.summary()
 ```
+<p align="center">
+  <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/Model_Info.png">
+</p>
+
+
 ```python
 x_train, x_val, y_train, y_val = train_test_split(
     train_inputs, train_labels, test_size=.2, random_state=42
 )
 ```
+
 ```python 
 history = model.fit(
     x_train, 
