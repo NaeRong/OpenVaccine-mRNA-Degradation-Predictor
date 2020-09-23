@@ -5,7 +5,7 @@ The goal of this project is to make a strong mRNA structure that doesn't degrade
 
 My model will take in an mRNA sequence and predict how stable it is by identifying fragile regions of bases that could break easily. The model will predict its reactivity and the degradation rates for each base of the sequence.
 
-For this competition, our inputs are the mRNA sequence (A list of characters - ACGUBEHIMSX). The rest of the columns are additional information that will help and can be discarded. 
+For this competition, our inputs are the mRNA sequence (A list of characters - ACGUBEHIMSX). The rest of the columns are additional information that will potentially help our model in the future and can be discarded. 
 
 Since the inputs are multiple strings of characters, Natural Language Processing (NLP) will be a great starting point for building the prediction model. 
 
