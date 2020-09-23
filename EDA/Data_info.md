@@ -3,7 +3,15 @@
 In this competition, you will be predicting the degradation rates at various locations along RNA sequence.
 There are multiple ground truth values provided in the training data. While the submission format requires all 5 to be predicted, only the following are scored: **reactivity, deg_Mg_pH10, and deg_Mg_50C**
 . Also, the mRNA sequence contains only these characters: **ACGUBEHIMSX**
-# Import all the packages
+
+- [Import Packages](#import-packages)
+- [Load Zip Files](#load-zip-files)
+- [Explore Shape And Null Values](#explore-shape-and-null-values)
+- [Explore mRNA Sequence](#explore-mrna-sequence)
+- [Explore mRNA Structure Column](#explore-mrna-structure-column)
+- [Signal to Noise Feature](#signal-to-noise-feature)
+
+## Import Packages
    ```python
     import pandas as pd, numpy as np
     import math, json, gc, random, os, sys
@@ -13,7 +21,7 @@ There are multiple ground truth values provided in the training data. While the 
     import tensorflow.keras.layers as L
     from sklearn.model_selection import train_test_split
    ```
-# Load 3 zip files from google colab environment
+## Load Zip Files 
 Files include:
 * train.json - the training data
 * test.json - the test set, without any columns associated with the ground truth.
@@ -27,7 +35,7 @@ Files include:
    test = pd.read_json(zf_1.open('test.json'), lines=True)
    train = pd.read_json(zf_2.open('train.json'), lines=True)
    ```
-# Explore Train / Test dataset shape and null values
+## Explore Shape And Null Values
 
 **Train dataset**:
 * Row: 2400
@@ -51,7 +59,7 @@ Files include:
   <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/Sample.png">
 </p>
 
-# Explore mRNA sequence
+## Explore mRNA Sequence
 sequence - (1x107 string in Train and Public Test, 130 in Private Test) Describes the RNA sequence, a combination of A, G, U, and C for each sample. Should be 107 characters long, and the first 68 bases should correspond to the 68 positions specified in seq_scored (note: indexed starting at 0).
 
 Sequence length for train is {107} and for test is {130,107}. This information will be useful for defining the GRU model sequence length.
@@ -69,7 +77,7 @@ ax.set_title('Sequence Length in test set')
   <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/Seq_len_test.png">
 </p>
 
-# Explore mRNA structure column
+## Explore mRNA Structure Column
 structure - (1x107 string in Train and Public Test, 130 in Private Test) An array of (, ), and . characters that describe whether a base is estimated to be paired or unpaired. Paired bases are denoted by opening and closing parentheses e.g. (....) means that base 0 is paired to base 5, and bases 1-4 are unpaired.
 
 Train dataset structure:
@@ -84,7 +92,7 @@ Test dataset structure:
 test.structure.value_counts()
 >> ......((((((((((.(((((.....))))))))((((((((...)))))...)))))))...))).(((((((....))))))).....................
 ```
-# Signal to Noise feature
+## Signal to Noise Feature
 Signal_to_noise and SN_filter columns control the 'quality' of samples! 
 
 As per the data tab of this competition the samples in test.json (Both private and public test datasets) have been filtered in the following way:
