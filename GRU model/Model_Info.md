@@ -2,11 +2,7 @@
 # GRU Model to predict likely degradation rates at RNA molecule
 mRNA subcellular localization mechanisms play an important role in post-transcriptional gene regulation.
 Zipcodes are the cis-regulatory elements from a different RNA-binding proteins interating with 
-**Next**
 
-## RNA degradation rate (To be continue)
-## Deep learning framework (To be continue)
-## GRU model  (To be continue)
 ## Model building steps
 ### Tokenize our RNA sequences before feeding into the GRU model:
 
@@ -127,12 +123,22 @@ model.summary()
   <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/Model_Info.png">
 </p>
 
-
+Defined train and validation datasets with 8 and 2 ratio.
 ```python
 x_train, x_val, y_train, y_val = train_test_split(
     train_inputs, train_labels, test_size=.2, random_state=42
 )
 ```
+Trained the model on train and validation datasets. In this model, I used the callback function to:
+
+* tf.keras.callbacks.ReduceLROnPlateau: to reduce the learning rate when a metric has stopped improving. 
+
+Patience is the number of epochs with no improvement after which the learning rate will be reduced. In this case, I will stop the model after 5 epochs without improvement. 
+
+* tf.keras.callbacks.ModelCheckpoint: Callback to save the Keras model or model weights at some frequency. I saved our model under the name "model.h5"
+
+
+*Note A callback is an object that can perform actions at various stages of training
 
 ```python 
 history = model.fit(
@@ -154,9 +160,40 @@ plt.plot(history.history['val_loss'])
 plt.plot(history.history['loss'])
 plt.legend(['val_loss', 'loss'], loc='upper right')
 ```
+As we can see in the loss function graph, 57 epoch has the best model performance.
+
 <p align="center">
   <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/val_loss_loss.png">
 </p>
+
+
+### Make prediction on Test dataset (both public and private)
+Public and private test datasets have different sequence lengths, therefore, we will preprocess each dataset separately and load the model using different tensor. 
+
+Preprocessed test dataset under different sequence length (Public: 107 and Private 130), and load model weights from 'model.h5' we saved in the previous step.
+
+```python
+public_df = test.query("seq_length == 107")
+private_df = test.query("seq_length == 130")
+
+public_inputs = preprocess_inputs(public_df)
+private_inputs = preprocess_inputs(private_df)
+
+gru_public = build_model(seq_len=107,pred_len = 107,embed_dim=len(token2int))
+gru_private = build_model(seq_len=130,pred_len = 130,embed_dim=len(token2int))
+
+gru_public.load_weights('model.h5')
+gru_private.load_weights('model.h5')
+```
+
+Applied GRU model on the test datasets to obtain predictions.
+```Python
+gru_public_preds = gru_public.predict(public_inputs)
+gru_private_preds = gru_private.predict(private_inputs)
+```
+
+### Final Submission Result:
+MCRMSE : 0.28810
 
 
 
