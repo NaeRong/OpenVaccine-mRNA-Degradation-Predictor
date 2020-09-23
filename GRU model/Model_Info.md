@@ -3,7 +3,7 @@
 mRNA subcellular localization mechanisms play an important role in post-transcriptional gene regulation.
 Zipcodes are the cis-regulatory elements from a different RNA-binding proteins interating with 
 
-## Model building steps
+## RNN - Deep Learning Model 
 ### Tokenize our RNA sequences before feeding into the GRU model:
 
 As the competition required, the **target columns (Columns to predict)** are
@@ -17,7 +17,8 @@ Tokenization process is shown as below.
 
 Text preprocessing is an important step for NLP models. It transforms text into a more readable form so that machine learning algorithms can perform better.
 
-#### 1. Define token to int function. Since mRNA only contains "ACGUBEHIMSX" characters, we are assigning index for each character.  
+#### 1. Define token to int function. Since mRNA only contains "ACGUBEHIMSX" characters, we are assigning an index for each character.  
+
 ```python
 token2int = {x:i for i, x in enumerate('().ACGUBEHIMSX')}
 print(token2int)
@@ -55,7 +56,7 @@ len(train_inputs)
 len(train_labels)
 >>> 1589
 ```
-### Model evaluation 
+### Model Evaluation 
 According to the competition guideline, Mean Columnwise Root Mean Squared Error(𝑀𝐶𝑅𝑀𝑆𝐸) is the model evaluation formula.
 
 𝑀𝐶𝑅𝑀𝑆𝐸 = 1𝑚∑𝑚𝑗=1𝑅𝑀𝑆𝐸𝑗
@@ -123,7 +124,8 @@ model.summary()
   <img src="https://github.com/NaeRong/OpenVaccine-mRNA-Degradation-Predictor/blob/master/Pictures/Model_Info.png">
 </p>
 
-Defined train and validation datasets with 8 and 2 ratio.
+Defined train and validation datasets with an 8 and 2 ratio.
+
 ```python
 x_train, x_val, y_train, y_val = train_test_split(
     train_inputs, train_labels, test_size=.2, random_state=42
@@ -154,7 +156,7 @@ history = model.fit(
     ]
 )
 ```
-Prediction result on train dataset:
+Prediction result (Train dataset):
 ```python 
 plt.plot(history.history['val_loss'])
 plt.plot(history.history['loss'])
@@ -167,7 +169,8 @@ As we can see in the loss function graph, 57 epoch has the best model performanc
 </p>
 
 
-### Make prediction on Test dataset (both public and private)
+### Test Dataset Prediction(both public and private)
+
 Public and private test datasets have different sequence lengths, therefore, we will preprocess each dataset separately and load the model using different tensor. 
 
 Preprocessed test dataset under different sequence length (Public: 107 and Private 130), and load model weights from 'model.h5' we saved in the previous step.
